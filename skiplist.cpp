@@ -1,5 +1,4 @@
-//
-// Created by Yusuf Pisan on 4/26/18.
+
 //
 
 #include <cassert>
@@ -14,21 +13,27 @@ using namespace std;
 ostream &operator<<(ostream &out, const SkipList &skip) {
   for (int d = skip.maxLevel - 1; d >= 0; d--) {
     out << d << ": ";
-    auto *curr = skip.head->forward[d];
+    auto *curr = skip.head->forward;
     if (curr != skip.tail) {
       out << curr->value;
-      curr = curr->forward[d];
+      curr = curr->forward;
     }
     while (curr != nullptr && curr != skip.tail) {
       out << "-->" << curr->value;
-      curr = curr->forward[d];
+      curr = curr->forward;
     }
     out << endl;
   }
   return out;
 }
 
-SNode::SNode(int value) : value{value} {}
+SNode::SNode(int value) : value{value} {
+  // if(head->forward == nullptr) {
+  //   head->forward = this;
+  //   this->backward = headptr;
+  //   this->forward = nullptr;
+  // }
+}
 
 // how many forward/backward pointers it has
 int SNode::height() const { return 0; }
@@ -47,7 +52,34 @@ bool SkipList::shouldInsertAtHigher() const {
 
 bool SkipList::add(const vector<int> &values) { return true; }
 
-bool SkipList::add(int value) { return true; }
+bool SkipList::add(int value) { 
+  if(head == nullptr) {
+    SNode *newNodePtr = new SNode(value);
+    head = newNodePtr;
+    newNodePtr->forward = nullptr;
+    cout << "Successful add " << value << endl;
+    return true;
+  }
+
+  SNode *curr = head->forward;
+  SNode *prev = head;
+  SNode *newNodePtr = new SNode(value);
+  while(prev != nullptr) {
+    if(prev->value < value && (curr == nullptr || curr->value > value)) {
+      newNodePtr->backward = prev;
+      newNodePtr->forward = curr;
+      cout << "Successful add " << value << endl;
+      return true;
+    } else if (prev->value > value) {
+      head = newNodePtr;
+      newNodePtr->forward = prev;
+      return true;
+    }
+    prev = curr;
+    curr = curr->forward;
+  }  
+  return false; 
+}
 
 SkipList::~SkipList() {
   // need to delete individual nodes

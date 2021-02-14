@@ -12,9 +12,13 @@ void test1() {
   cout << boolalpha;
   skp.add(3);
   skp.add(5);
-  skp.add(vector<int>{1, 7, 9});
-  // cannot add existing
-  assert(!skp.add(vector<int>{1, 7}));
+  skp.add(6);
+  skp.add(13);
+  skp.add(7);
+  skp.add(1);
+  // skp.add(vector<int>{1, 7, 9});
+  // // cannot add existing
+  // assert(!skp.add(vector<int>{1, 7}));
   cout << skp << endl;
   cout << "7 ? " << skp.contains(7) << endl;
   cout << "3 ? " << skp.contains(3) << endl;
