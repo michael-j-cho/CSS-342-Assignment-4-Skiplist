@@ -11,23 +11,22 @@
 using namespace std;
 
 ostream &operator<<(ostream &out, const SkipList &skip) {
-  for (int d = skip.maxLevel - 1; d >= 0; d--) {
-    out << d << ": ";
-    SNode *curr = skip.head->next;
-    if (curr != skip.tail) {
-      out << curr->value;
-      curr = curr->next;
+  for (int i = skip.maxLevel - 1; i >= 0; i--) {
+    out << "Level: " + to_string(i) + " -- ";
+    SNode* curr = skip.frontGuard[i];
+    while(curr != nullptr) {
+      if(curr->value > INT_MIN && curr->value < INT_MAX) {
+        out << to_string(curr->value) + " --> ";    
+      }
+    curr = curr->next;
     }
-    while (curr != nullptr && curr != skip.tail) {
-      out << "-->" << curr->value;
-      curr = curr->next;
-    }
-    out << endl;
+    out << "\n";
   }
   return out;
 }
 
-SNode::SNode(int value) : value{value}{}
+SNode::SNode(int value) : value{value}, next{nullptr}, prev{nullptr}, 
+up{nullptr}, down{nullptr} {}
 
 // how many next/prev pointers it has
 int SNode::height() const { return 0; }
@@ -38,12 +37,23 @@ void SNode::increaseHeight() {}
 SkipList::SkipList(int maxLevel, int probability)
     : maxLevel{maxLevel}, probability{probability} {
   assert(maxLevel > 0 && probability >= 0 && probability < 100);
-  head = new SNode(INT_MIN);
-  tail = new SNode(INT_MAX);
-  head->next = tail;
-  head->prev = nullptr;
-  tail->next = nullptr;
-  tail->prev = head;
+  // dynamically allocate frontGuards and rearGuards arrays
+  frontGuard = new SNode *[maxLevel];
+  rearGuard = new SNode *[maxLevel];
+
+  for(int i = 0; i < maxLevel; i++) {
+    frontGuard[i] = new SNode(INT_MIN);
+    rearGuard[i] = new SNode(INT_MAX);
+    frontGuard[i]->next = rearGuard[i];
+    rearGuard[i]->prev = frontGuard[i];
+  }
+
+  for(int i = 0; i < maxLevel-1; i++) {
+    frontGuard[i]->up = frontGuard[i+1];
+    frontGuard[i+1]->down = frontGuard[i];
+    rearGuard[i]->up = rearGuard[i+1];
+    rearGuard[i+1]->down = rearGuard[i];
+  }
 }
 
 bool SkipList::shouldInsertAtHigher() const {
@@ -58,25 +68,45 @@ bool SkipList::add(int value) {
   }
 
   SNode *newNodePtr = new SNode(value);
-  SNode *curr = head;
-  SNode *prev = head;
+  SNode *curr = frontGuard[0];
+  SNode *prev = frontGuard[0];
   
   while(curr->value < value) {
+    
     curr = curr->next;
+    
   }
   if(curr->value > value && curr->prev->value < value) {
+   
     prev = curr->prev;
+    
     prev->next = newNodePtr;
+ 
     newNodePtr->prev = prev;
+    
     newNodePtr->next = curr;
+    
     curr->prev = newNodePtr;
+    
+   
     return true;
   }
   return false;
 }
 
 SkipList::~SkipList() {
-  // need to delete individual nodes
+  clear();
+}
+
+void SkipList::clear() {
+  // SNode *curr = head;
+  // while(curr->next != nullptr) {
+  //   delete curr;
+  //   cout << "Deleting " << curr->value << endl;
+  //   curr = curr->next;
+  // }
+  // head = nullptr;
+  // // nodeToDeletePtr = nullptr;
 }
 
 bool SkipList::remove(int data) { 
@@ -104,14 +134,17 @@ vector<SNode *> SkipList::getBeforeNodes(int data) const {
 SNode *SkipList::containsSNode(int data) const { return nullptr; }
 
 bool SkipList::contains(int data) const { 
-  SNode *curr = head;
-  while(curr != nullptr) {
-    if(curr->value == data) {
-      return true;
-    }
+  
+  for(int i = 0; i < maxLevel; i++) {
+    SNode *curr = frontGuard[i];
+    while(curr != nullptr) {
+      if(curr->value == data) {
+        return true;
+      }
     curr = curr->next;
   }
-return false; 
+  return false; 
+  }
 }
 
 void SkipList::connect2AtLevel(SNode *a, SNode *b, int level) {}

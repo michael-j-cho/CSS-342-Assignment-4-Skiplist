@@ -11,8 +11,11 @@ void test1() {
   SkipList skp(5, 80);
   cout << boolalpha;
   skp.add(3);
+  cout << skp << endl;
   skp.add(10);
+  cout << skp << endl;
   skp.add(5);
+  cout << skp << endl;
   skp.add(7);
   skp.add(9);
   cout << skp << endl;
