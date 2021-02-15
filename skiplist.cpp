@@ -72,23 +72,14 @@ bool SkipList::add(int value) {
   SNode *prev = frontGuard[0];
   
   while(curr->value < value) {
-    
     curr = curr->next;
-    
   }
   if(curr->value > value && curr->prev->value < value) {
-   
-    prev = curr->prev;
-    
+    prev = curr->prev; 
     prev->next = newNodePtr;
- 
     newNodePtr->prev = prev;
-    
     newNodePtr->next = curr;
-    
-    curr->prev = newNodePtr;
-    
-   
+    curr->prev = newNodePtr;  
     return true;
   }
   return false;
