@@ -66,10 +66,15 @@ bool SkipList::add(int value) {
   if(contains(value)) {
     return false;
   }
+  int level = 0;
+  addAtLevel(value, level);
+  return true;
+}
 
+void SkipList::addAtLevel(int value, int level) {
   SNode *newNodePtr = new SNode(value);
-  SNode *curr = frontGuard[0];
-  SNode *prev = frontGuard[0];
+  SNode *curr = frontGuard[level];
+  SNode *prev = frontGuard[level];
   
   while(curr->value < value) {
     curr = curr->next;
@@ -79,10 +84,13 @@ bool SkipList::add(int value) {
     prev->next = newNodePtr;
     newNodePtr->prev = prev;
     newNodePtr->next = curr;
-    curr->prev = newNodePtr;  
-    return true;
+    curr->prev = newNodePtr;
+    cout << "XXX" << endl;
+    level++;
+      if(shouldInsertAtHigher() && level < maxLevel) {
+        addAtLevel(value, level);
+      }
   }
-  return false;
 }
 
 SkipList::~SkipList() {

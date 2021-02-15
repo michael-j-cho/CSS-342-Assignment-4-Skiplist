@@ -66,7 +66,7 @@ class SkipList {
 
 private:
   // maximum number of levels
-  int maxLevel = 4;
+  int maxLevel = 1;
 
   // probability of inserting at a higher level
   // as an integer between 0% and 100% (exclusive)
@@ -121,6 +121,7 @@ public:
 
   // return true if successfully added, no duplicates allowed
   bool add(int value);
+  void addAtLevel(int value, int level);
 
   // return true if successfully added, no duplicates
   bool add(const vector<int> &values);

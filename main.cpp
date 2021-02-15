@@ -17,7 +17,16 @@ void test1() {
   skp.add(5);
   cout << skp << endl;
   skp.add(7);
-  skp.add(9);
+  skp.add(11);
+  skp.add(12);
+  skp.add(13);
+  skp.add(14);
+  skp.add(15);
+  skp.add(16);
+  skp.add(17);
+  skp.add(18);
+  skp.add(19);
+  skp.add(20);
   cout << skp << endl;
   skp.remove(9);
   // skp.add(vector<int>{1, 7, 9});
