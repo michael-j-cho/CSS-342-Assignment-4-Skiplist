@@ -11,11 +11,12 @@ void test1() {
   SkipList skp(5, 80);
   cout << boolalpha;
   skp.add(3);
+  skp.add(10);
   skp.add(5);
-  skp.add(6);
-  skp.add(13);
   skp.add(7);
-  skp.add(1);
+  skp.add(9);
+  cout << skp << endl;
+  skp.remove(9);
   // skp.add(vector<int>{1, 7, 9});
   // // cannot add existing
   // assert(!skp.add(vector<int>{1, 7}));

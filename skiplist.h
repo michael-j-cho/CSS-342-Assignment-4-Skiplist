@@ -42,10 +42,10 @@ private:
   int value{0};
 
   // link to Next SNode 
-  SNode * forward;
+  SNode * next;
 
   // link to Prev SNode
-  SNode * backward;
+  SNode * prev;
    
   //link to up node 
   SNode * up;
