@@ -113,13 +113,14 @@ bool SkipList::remove(int data) {
   if(!contains(data)) {
     return false;
   }
-  SNode *curr = head;
-  while(curr != nullptr) {
-    if(curr->value == data){
-      curr->prev->next = curr->next;
-      // delete??
+  for(int i = 0; i < maxLevel; i++) {
+    SNode *curr = frontGuard[i];
+    while(curr != nullptr) {
+      if(curr->value == data){
+        curr->prev->next = curr->next;
+      }    
+      curr = curr->next;
     }
-    curr = curr->next;
   }
 return true; 
 }
@@ -134,7 +135,6 @@ vector<SNode *> SkipList::getBeforeNodes(int data) const {
 SNode *SkipList::containsSNode(int data) const { return nullptr; }
 
 bool SkipList::contains(int data) const { 
-  
   for(int i = 0; i < maxLevel; i++) {
     SNode *curr = frontGuard[i];
     while(curr != nullptr) {
