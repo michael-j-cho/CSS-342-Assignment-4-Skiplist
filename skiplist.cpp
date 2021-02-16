@@ -71,7 +71,7 @@ bool SkipList::add(int value) {
   return true;
 }
 
-void SkipList::addAtLevel(int value, int level) {
+bool SkipList::addAtLevel(int value, int level) {
   SNode *newNodePtr = new SNode(value);
   SNode *curr = frontGuard[level];
   SNode *prev = frontGuard[level];
@@ -85,12 +85,27 @@ void SkipList::addAtLevel(int value, int level) {
     newNodePtr->prev = prev;
     newNodePtr->next = curr;
     curr->prev = newNodePtr;
-    cout << "XXX" << endl;
     level++;
       if(shouldInsertAtHigher() && level < maxLevel) {
         addAtLevel(value, level);
+        connectBelow(newNodePtr, level);
       }
+      return true;
   }
+  return false;
+}
+
+bool SkipList::connectBelow(SNode *node, int level) {
+  SNode *currBelow = frontGuard[level - 1];
+  while(currBelow != nullptr) {
+    if(currBelow->value == node->value) {
+      node->up = currBelow;
+      currBelow->down = node;
+      return true;
+    }
+    currBelow = currBelow->next;
+  }
+  return false;
 }
 
 SkipList::~SkipList() {
@@ -134,16 +149,14 @@ vector<SNode *> SkipList::getBeforeNodes(int data) const {
 SNode *SkipList::containsSNode(int data) const { return nullptr; }
 
 bool SkipList::contains(int data) const { 
-  for(int i = 0; i < maxLevel; i++) {
-    SNode *curr = frontGuard[i];
-    while(curr != nullptr) {
-      if(curr->value == data) {
-        return true;
-      }
-    curr = curr->next;
+  SNode *curr = frontGuard[0];
+  while(curr != nullptr) {
+    if(curr->value == data) {
+      return true;
+    }
+  curr = curr->next;
   }
   return false; 
-  }
 }
 
 void SkipList::connect2AtLevel(SNode *a, SNode *b, int level) {}

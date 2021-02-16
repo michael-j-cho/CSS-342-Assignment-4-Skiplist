@@ -121,7 +121,8 @@ public:
 
   // return true if successfully added, no duplicates allowed
   bool add(int value);
-  void addAtLevel(int value, int level);
+  bool addAtLevel(int value, int level);
+  bool connectBelow(SNode *node, int level);
 
   // return true if successfully added, no duplicates
   bool add(const vector<int> &values);
