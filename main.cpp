@@ -21,10 +21,6 @@ void test1() {
   skp.add(14);
   skp.add(15);
   skp.add(16);
-  // skp.clear();
-  // cout << "XXXXXXXXXXXXX" << endl << skp << " XXXXX" << endl;
-  // skp.add(17);
-  // cout << "XXXXXXXXXXXXX" << endl << endl;
   skp.add(18);
   skp.add(19);
   skp.add(20);
@@ -38,6 +34,7 @@ void test1() {
   cout << "3 ? " << skp.contains(3) << endl;
   cout << "-100 ? " << skp.contains(-100) << endl;
   cout << "100 ? " << skp.contains(100) << endl;
+  
   bool result = skp.remove(5);
   assert(result);
   result = skp.remove(5);
