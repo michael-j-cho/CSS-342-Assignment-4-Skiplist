@@ -15,9 +15,7 @@ ostream &operator<<(ostream &out, const SkipList &skip) {
     out << "Level: " + to_string(i) + " -- ";
     SNode* curr = skip.frontGuard[i];
     while(curr != nullptr) {
-      if(curr->value > INT_MIN && curr->value < INT_MAX) {
-        out << to_string(curr->value) + " --> ";    
-      }
+      out << to_string(curr->value) + " --> ";    
     curr = curr->next;
     }
     out << "\n";
@@ -76,7 +74,7 @@ bool SkipList::addAtLevel(int value, int level) {
   SNode *curr = frontGuard[level];
   SNode *prev = frontGuard[level];
   
-  while(curr->value < value) {
+  while(curr->value < value && curr->next != nullptr) {
     curr = curr->next;
   }
   if(curr->value > value && curr->prev->value < value) {
@@ -113,14 +111,19 @@ SkipList::~SkipList() {
 }
 
 void SkipList::clear() {
-  // SNode *curr = head;
-  // while(curr->next != nullptr) {
-  //   delete curr;
-  //   cout << "Deleting " << curr->value << endl;
-  //   curr = curr->next;
-  // }
-  // head = nullptr;
-  // // nodeToDeletePtr = nullptr;
+  SNode *curr;
+  for(int i = maxLevel - 1; i >= 0; i--) {
+    curr = frontGuard[i];
+    while(curr->next != nullptr) {
+      curr = curr->next;
+      delete curr->prev;
+      curr->prev = nullptr;
+    }
+    delete curr;
+    curr = nullptr;
+  }  
+  delete[] frontGuard;
+  delete[] rearGuard;
 }
 
 bool SkipList::remove(int data) { 

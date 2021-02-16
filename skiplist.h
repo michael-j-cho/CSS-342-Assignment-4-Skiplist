@@ -66,11 +66,11 @@ class SkipList {
 
 private:
   // maximum number of levels
-  int maxLevel = 1;
+  int maxLevel;
 
   // probability of inserting at a higher level
   // as an integer between 0% and 100% (exclusive)
-  int probability = 50;
+  int probability;
 
   SNode **frontGuard;
   SNode **rearGuard;
@@ -100,7 +100,7 @@ private:
 
 public:
   // default SkipList has only 1 level, just one doubly-linked list
-  explicit SkipList(int maxLevel = 1, int probability = 0);
+  explicit SkipList(int maxLevel, int probability = 50);
 
   // destructor
   virtual ~SkipList();

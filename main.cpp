@@ -21,7 +21,10 @@ void test1() {
   skp.add(14);
   skp.add(15);
   skp.add(16);
-  skp.add(17);
+  // skp.clear();
+  // cout << "XXXXXXXXXXXXX" << endl << skp << " XXXXX" << endl;
+  // skp.add(17);
+  // cout << "XXXXXXXXXXXXX" << endl << endl;
   skp.add(18);
   skp.add(19);
   skp.add(20);
@@ -42,9 +45,20 @@ void test1() {
   cout << skp << endl;
 }
 
+void test04() {
+    SkipList s(5);
+    for (int i = 0; i < 20; ++i) {
+        int number = rand() % 100;
+        s.add(number);
+        cout << "After adding " << number << endl;
+        cout << s << endl;
+    }
+}
+
 int main() {
 //test
   test1();
+  test04();
 
   cout << "Done." << endl;
   return 0;
