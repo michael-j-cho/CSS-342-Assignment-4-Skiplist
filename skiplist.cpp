@@ -16,7 +16,7 @@ ostream &operator<<(ostream &out, const SkipList &skip) {
     SNode* curr = skip.frontGuard[i];
     while(curr != nullptr) {
       out << to_string(curr->value) + " --> ";    
-    curr = curr->next;
+      curr = curr->next;
     }
     out << "\n";
   }
