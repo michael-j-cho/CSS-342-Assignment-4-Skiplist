@@ -30,6 +30,7 @@ SkipList::SkipList(int maxLevel, int probability)
     : maxLevel{maxLevel}, probability{probability} {
   assert(maxLevel > 0 && probability >= 0 && probability < 100);
   // dynamically allocate frontGuards and rearGuards arrays
+  // test comment
   frontGuard = new SNode *[maxLevel];
   rearGuard = new SNode *[maxLevel];
 
