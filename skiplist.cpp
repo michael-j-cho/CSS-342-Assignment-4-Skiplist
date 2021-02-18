@@ -63,27 +63,32 @@ bool SkipList::add(int value) {
 }
 
 bool SkipList::addAtLevel(int value, int level) {
-  SNode *newNodePtr = new SNode(value);
+  SNode *newNode = new SNode(value);
   SNode *curr = frontGuard[level];
   SNode *prev = frontGuard[level];
-  
+
   while(curr->value < value && curr->next != nullptr) {
     curr = curr->next;
   }
+
   if(curr->value > value && curr->prev->value < value) {
-    prev = curr->prev; 
-    prev->next = newNodePtr;
-    newNodePtr->prev = prev;
-    newNodePtr->next = curr;
-    curr->prev = newNodePtr;
+    connectAtLevel(prev, curr, newNode);
     level++;
       if(shouldInsertAtHigher() && level < maxLevel) {
         addAtLevel(value, level);
-        connectBelow(newNodePtr, level);
+        connectBelow(newNode, level);
       }
       return true;
   }
   return false;
+}
+
+void SkipList::connectAtLevel(SNode *prev, SNode *curr, SNode *newNode) {
+    prev = curr->prev; 
+    prev->next = newNode;
+    newNode->prev = prev;
+    newNode->next = curr;
+    curr->prev = newNode;   
 }
 
 bool SkipList::connectBelow(SNode *node, int level) {

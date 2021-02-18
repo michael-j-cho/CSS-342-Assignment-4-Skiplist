@@ -100,6 +100,8 @@ public:
 
   bool addAtLevel(int value, int level);
 
+  void connectAtLevel(SNode *prev, SNode *curr, SNode *newNode);
+
   bool connectBelow(SNode *node, int level);
 
   // return true if successfully removed
