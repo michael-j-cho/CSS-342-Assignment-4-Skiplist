@@ -98,11 +98,11 @@ public:
   // return true if successfully added, no duplicates allowed
   bool add(int value);
 
-  bool addAtLevel(int value, int level);
+  void addAtLevel(int value, int level);
 
   void connectAtLevel(SNode *prev, SNode *curr, SNode *newNode);
 
-  bool connectBelow(SNode *node, int level);
+  void connectBelow(SNode *node, int level);
 
   // return true if successfully removed
   bool remove(int data);

@@ -62,7 +62,7 @@ bool SkipList::add(int value) {
   return true;
 }
 
-bool SkipList::addAtLevel(int value, int level) {
+void SkipList::addAtLevel(int value, int level) {
   SNode *newNode = new SNode(value);
   SNode *curr = frontGuard[level];
   SNode *prev = frontGuard[level];
@@ -70,17 +70,12 @@ bool SkipList::addAtLevel(int value, int level) {
   while(curr->value < value && curr->next != nullptr) {
     curr = curr->next;
   }
-
-  if(curr->value > value && curr->prev->value < value) {
-    connectAtLevel(prev, curr, newNode);
-    level++;
-      if(shouldInsertAtHigher() && level < maxLevel) {
-        addAtLevel(value, level);
-        connectBelow(newNode, level);
-      }
-      return true;
-  }
-  return false;
+  connectAtLevel(prev, curr, newNode);
+  level++;
+    if(shouldInsertAtHigher() && level < maxLevel) {
+      addAtLevel(value, level);
+      connectBelow(newNode, level);
+    }
 }
 
 void SkipList::connectAtLevel(SNode *prev, SNode *curr, SNode *newNode) {
@@ -91,17 +86,15 @@ void SkipList::connectAtLevel(SNode *prev, SNode *curr, SNode *newNode) {
     curr->prev = newNode;   
 }
 
-bool SkipList::connectBelow(SNode *node, int level) {
+void SkipList::connectBelow(SNode *node, int level) {
   SNode *currBelow = frontGuard[level - 1];
   while(currBelow != nullptr) {
     if(currBelow->value == node->value) {
       node->up = currBelow;
       currBelow->down = node;
-      return true;
     }
     currBelow = currBelow->next;
   }
-  return false;
 }
 
 SkipList::~SkipList() {
@@ -129,17 +122,15 @@ bool SkipList::remove(int data) {
     return false;
   }
   SNode *curr;
-  SNode *prev;
   for(int i = 0; i < maxLevel; i++) {
     curr = frontGuard[i];
-    prev = frontGuard[i];
     while(curr->next != nullptr) {
       curr = curr->next;
       if(curr->value == data) {
-        prev = curr->prev;
-        prev->next = curr->next;
-        curr->next->prev = prev;
+        curr->prev->next = curr->next;
+        curr->next->prev = curr->prev;
         delete curr;
+        break;
       }
     }
   }
