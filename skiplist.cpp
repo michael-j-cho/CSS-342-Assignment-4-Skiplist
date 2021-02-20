@@ -32,7 +32,7 @@ ostream &operator<<(ostream &out, const SkipList &skip) {
 }
 
 /** Constructor: Creates an SNode object with a specified value.
- * All pointers are set to nullptr.
+All pointers are set to nullptr.
 Precondition: None.
 Postcondition: Creates SNode obj with value. */
 SNode::SNode(int value)
@@ -40,8 +40,7 @@ SNode::SNode(int value)
 
 /** Constructor: Creates a SkipList object and creates array containers
 for the pointers. Sets the front and rear of each level array to
-INT_MIN and INT_MAX and connects each pointer horizontally and
-vertically.
+INT_MIN and INT_MAX and connects each pointer horizontally and vertically.
 Precondition: None.
 Postcondition: Creates specified level of arrays and connects "guards". */
 SkipList::SkipList(int maxLevel, int probability)

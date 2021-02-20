@@ -30,7 +30,7 @@ void test1() {
   cout << "7 ? " << skp.contains(7) << endl;
   cout << "3 ? " << skp.contains(3) << endl;
   cout << "-100 ? " << skp.contains(-100) << endl;
-  cout << "100 ? " << skp.contains(100) << endl;
+  cout << "100 ? " << skp.contains(100) << endl << endl;
   bool result = skp.remove(5);
   assert(result);
   result = skp.remove(5);
@@ -38,13 +38,13 @@ void test1() {
   cout << skp << endl;
 }
 
-/** Test. Creates a SkipList object s with 5 levels
+/** Test. Creates a SkipList object s with 4 levels
 and 50 percent probability. Uses a for loop for randomly
 generate 40 numbers to enter into the skiplist. Displays
 the skiplist after each added value. */
 void test2() {
-  SkipList s(5);
-  for (int i = 0; i < 40; ++i) {
+  SkipList s(4);
+  for (int i = 0; i < 20; ++i) {
     int number = rand() % 100;
     s.add(number);
     cout << "After adding " << number << endl;
