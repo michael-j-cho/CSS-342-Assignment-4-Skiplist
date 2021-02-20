@@ -1,7 +1,7 @@
 /** Michael Cho 2/19/21
  * CSS342
  *
- * This is the main driver file. It is running assertion tests.
+ * This is the main driver file that is running the tests.
  * */
 
 #include "skiplist.h"
