@@ -1,22 +1,8 @@
-/**
- * SkipList https://en.wikipedia.org/wiki/Skip_list
- * also used by MemSQL
- * https://www.singlestore.com/blog/what-is-skiplist-why-skiplist-index-for-memsql/
- * SkipList with a depth of 1 is similar to a doubly-linked list
- * Each item has a p percent chance of being at the next level up
- * For our implementation p = 50%
- * All elements are inserted at the lowest Depth (1)
- * 50% of the elements inserted in Depth = 2
- * 50% of 50%, or 25% of the elements inserted in Depth = 3
- * and so on
- *
- * If a Skip List has only 1 level, such as p = 0%
- * Insert O(n), Search O(n)
- * For Depth > 1
- * Insert O(log n), Search O(log n)
- * Modifying p allows us to trade off search speed and storage cost
- *
- */
+/** Michael Cho 2/19/21
+ * CSS342
+ * 
+ * SkipList class header file 
+ * */
 
 #ifndef ASS4_SKIPLIST_H
 #define ASS4_SKIPLIST_H

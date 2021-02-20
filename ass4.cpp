@@ -1,14 +1,12 @@
 /** Michael Cho 2/19/21
  * CSS342
- * 
+ *
  * This is the main driver file. It is running assertion tests.
  * */
 
-
-
+#include "skiplist.h"
 #include <cassert>
 #include <iostream>
-#include "skiplist.h"
 
 using namespace std;
 
@@ -27,6 +25,8 @@ void test1() {
   skp.add(33);
   skp.add(2);
   cout << skp << endl;
+  assert(skp.contains(2));
+  assert(!skp.contains(300));
   cout << "7 ? " << skp.contains(7) << endl;
   cout << "3 ? " << skp.contains(3) << endl;
   cout << "-100 ? " << skp.contains(-100) << endl;
@@ -44,7 +44,7 @@ generate 40 numbers to enter into the skiplist. Displays
 the skiplist after each added value. */
 void test2() {
   SkipList s(5);
-   for (int i = 0; i < 40; ++i) {
+  for (int i = 0; i < 40; ++i) {
     int number = rand() % 100;
     s.add(number);
     cout << "After adding " << number << endl;
@@ -56,11 +56,11 @@ void test2() {
 and 100 percent probability. Uses a for loop for randomly
 generate 20 numbers to enter into the skiplist. Displays
 he skiplist after each added value. This skiplist should
-add the same value at every depth level because of 100% 
+add the same value at every depth level because of 100%
 probability.*/
 void test3() {
-  SkipList s(5,100);
-   for (int i = 0; i < 20; ++i) {
+  SkipList s(5, 100);
+  for (int i = 0; i < 20; ++i) {
     int number = rand() % 100;
     s.add(number);
   }
@@ -68,11 +68,11 @@ void test3() {
 }
 
 /** Test. Creates a SkipList object s with the default depth
-level and probability (1, 50). 20 numbers are randomly 
+level and probability (1, 50). 20 numbers are randomly
 generated. All values will be on a single level.*/
 void test4() {
   SkipList s;
-   for (int i = 0; i < 20; ++i) {
+  for (int i = 0; i < 20; ++i) {
     int number = rand() % 100;
     s.add(number);
   }

@@ -1,17 +1,17 @@
-/** Michael Cho 2/5/21
+/** Michael Cho 2/19/21
  * CSS342
- * 
+ *
  * This is the skiplist implementation file. It contains the methods
  * to construct a skiplist, as well as display, navigate, add, remove,
  * and connect nodes in the list. There are also a few various helper
  * methods.
  * */
 
+#include "skiplist.h"
 #include <cassert>
 #include <climits>
 #include <cstdlib>
 #include <iostream>
-#include "skiplist.h"
 
 using namespace std;
 
@@ -21,9 +21,9 @@ Postcondition: Prints SkipList to the console.*/
 ostream &operator<<(ostream &out, const SkipList &skip) {
   for (int i = skip.maxLevel - 1; i >= 0; i--) {
     out << "Level: " + to_string(i) + " -- ";
-    SNode* curr = skip.frontGuard[i];
-    while(curr != nullptr) {
-      out << to_string(curr->value) + ", ";    
+    SNode *curr = skip.frontGuard[i];
+    while (curr != nullptr) {
+      out << to_string(curr->value) + ", ";
       curr = curr->next;
     }
     out << "\n";
@@ -35,11 +35,11 @@ ostream &operator<<(ostream &out, const SkipList &skip) {
  * All pointers are set to nullptr.
 Precondition: None.
 Postcondition: Creates SNode obj with value. */
-SNode::SNode(int value) : value{value}, next{nullptr}, prev{nullptr}, 
-up{nullptr}, down{nullptr} {}
+SNode::SNode(int value)
+    : value{value}, next{nullptr}, prev{nullptr}, up{nullptr}, down{nullptr} {}
 
 /** Constructor: Creates a SkipList object and creates array containers
-for the pointers. Sets the front and rear of each level array to 
+for the pointers. Sets the front and rear of each level array to
 INT_MIN and INT_MAX and connects each pointer horizontally and
 vertically.
 Precondition: None.
@@ -56,7 +56,7 @@ SkipList::SkipList(int maxLevel, int probability)
   // Initializes each front and rear guard at each level with
   // INT_MAX and INT_MIN respectively. Then, connects the front
   // and rear.
-  for(int i = 0; i < maxLevel; i++) {
+  for (int i = 0; i < maxLevel; i++) {
     frontGuard[i] = new SNode(INT_MIN);
     rearGuard[i] = new SNode(INT_MAX);
     frontGuard[i]->next = rearGuard[i];
@@ -64,20 +64,18 @@ SkipList::SkipList(int maxLevel, int probability)
   }
 
   // Connects each level vertically.
-  for(int i = 0; i < maxLevel-1; i++) {
-    frontGuard[i]->up = frontGuard[i+1];
-    frontGuard[i+1]->down = frontGuard[i];
-    rearGuard[i]->up = rearGuard[i+1];
-    rearGuard[i+1]->down = rearGuard[i];
+  for (int i = 0; i < maxLevel - 1; i++) {
+    frontGuard[i]->up = frontGuard[i + 1];
+    frontGuard[i + 1]->down = frontGuard[i];
+    rearGuard[i]->up = rearGuard[i + 1];
+    rearGuard[i + 1]->down = rearGuard[i];
   }
 }
 
 /** Destructor: Calls the clear method.
 Precondition: SkipList object must exist.
 Postcondition: Deletes the SkipList object with the clear method. */
-SkipList::~SkipList() {
-  clear();
-}
+SkipList::~SkipList() { clear(); }
 
 /** Clear: Deletes each dynamically created SNode in the SkipList
 object and sets each one to nullptr. Then, deletes the dynamically
@@ -86,16 +84,16 @@ Precondition: SkipList object must exist.
 Postcondition: Deletes all SNodes, frontGuard, and rearGuard. */
 void SkipList::clear() {
   SNode *curr;
-  for(int i = maxLevel - 1; i >= 0; i--) {
+  for (int i = maxLevel - 1; i >= 0; i--) {
     curr = frontGuard[i];
-    while(curr->next != nullptr) {
+    while (curr->next != nullptr) {
       curr = curr->next;
       delete curr->prev;
       curr->prev = nullptr;
     }
     delete curr;
     curr = nullptr;
-  }  
+  }
   delete[] frontGuard;
   delete[] rearGuard;
 }
@@ -111,8 +109,8 @@ bool SkipList::shouldInsertAtHigher() const {
 at level 0 if value does not already exist.
 Precondition: SkipList object must exist.
 Postcondition: Returns true add is successful.*/
-bool SkipList::add(int value) { 
-  if(contains(value)) {
+bool SkipList::add(int value) {
+  if (contains(value)) {
     return false;
   }
   int level = 0;
@@ -121,7 +119,7 @@ bool SkipList::add(int value) {
 }
 
 /** Method that creates a new SNode with specified value and adds that SNode
-at a specified level. This method recursively calls itself to add at higher 
+at a specified level. This method recursively calls itself to add at higher
 levels if necessary.
 Precondition: SkipList object must exist.
 Postcondition: Adds a new node at the specified level. */
@@ -130,43 +128,43 @@ void SkipList::addAtLevel(int value, int level) {
   SNode *curr = frontGuard[level];
 
   // Traversing through the nodes at current level.
-  while(curr->value < value && curr->next != nullptr) {
+  while (curr->value < value && curr->next != nullptr) {
     curr = curr->next;
   }
 
-  // When the correct position in the list is found, calls addBefore 
+  // When the correct position in the list is found, calls addBefore
   // method to link nodes together.
   addBefore(curr, newNode);
   assert(newNode->next == curr && curr->prev == newNode);
-  assert (newNode->prev != nullptr && newNode->prev->value < newNode->value);
+  assert(newNode->prev != nullptr && newNode->prev->value < newNode->value);
   level++;
 
-    // Check whether to increase depth of skiplist.
-    if(shouldInsertAtHigher() && level < maxLevel) {
-      addAtLevel(value, level);
-      connectLevels(newNode, level);
-    }
+  // Check whether to increase depth of skiplist.
+  if (shouldInsertAtHigher() && level < maxLevel) {
+    addAtLevel(value, level);
+    connectLevels(newNode, level);
+  }
 }
 
-/** Method that links nodes in correct order horizontally when adding a new value.
-Precondition: SkipList object must exist.
-Postcondition: Inserts a node before the current node. */
+/** Method that links nodes in correct order horizontally when adding a new
+value. Precondition: SkipList object must exist. Postcondition: Inserts a node
+before the current node. */
 void SkipList::addBefore(SNode *curr, SNode *newNode) {
   assert(newNode != nullptr && newNode->value < curr->value);
   newNode->prev = curr->prev;
   curr->prev->next = newNode;
   newNode->next = curr;
-  curr->prev = newNode;   
+  curr->prev = newNode;
 }
 
-/** Method that connects levels vertically. Creates a node below the current level
-that finds the same value and connects the two levels.
-Precondition: SkipList object must exist. Value must exit on both levels.
-Postcondition: Connects node below with node above.*/
+/** Method that connects levels vertically. Creates a node below the current
+level that finds the same value and connects the two levels. Precondition:
+SkipList object must exist. Value must exit on both levels. Postcondition:
+Connects node below with node above.*/
 void SkipList::connectLevels(SNode *node, int level) {
   SNode *nodeBelow = frontGuard[level - 1];
-  while(nodeBelow != nullptr) {
-    if(nodeBelow->value == node->value) {
+  while (nodeBelow != nullptr) {
+    if (nodeBelow->value == node->value) {
       nodeBelow->up = node;
       node->down = nodeBelow;
       break;
@@ -175,22 +173,21 @@ void SkipList::connectLevels(SNode *node, int level) {
   }
 }
 
-/** Method that removes a single value throughout the skiplist. Uses the contains
-method to check whether the value exists in the list. Then, goes through each 
-level and deletes the node with the specified value data. Also, deletes the pointer
-and sets to nullptr.
-Precondition: SkipList object must exist.
-Postcondition: Returns true removed successfully.*/
-bool SkipList::remove(int data) { 
-  if(!contains(data)) {
+/** Method that removes a single value throughout the skiplist. Uses the
+contains method to check whether the value exists in the list. Then, goes
+through each level and deletes the node with the specified value data. Also,
+deletes the pointer and sets to nullptr. Precondition: SkipList object must
+exist. Postcondition: Returns true removed successfully.*/
+bool SkipList::remove(int data) {
+  if (!contains(data)) {
     return false;
   }
   SNode *curr;
-  for(int i = 0; i < maxLevel; i++) {
+  for (int i = 0; i < maxLevel; i++) {
     curr = frontGuard[i];
-    while(curr->next != nullptr) {
+    while (curr->next != nullptr) {
       curr = curr->next;
-      if(curr->value == data) {
+      if (curr->value == data) {
         curr->prev->next = curr->next;
         curr->next->prev = curr->prev;
         delete curr;
@@ -199,24 +196,23 @@ bool SkipList::remove(int data) {
     }
   }
   curr = nullptr;
-return true; 
+  return true;
 }
 
-/** Boolean method that checks whether a particular value exists within the list.
-Method searches throughout the list with the order of logN by going from highest
-level of the list down. 
-Precondition: SkipList object must exist.
+/** Boolean method that checks whether a particular value exists within the
+list. Method searches throughout the list with the order of logN by going from
+highest level of the list down. Precondition: SkipList object must exist.
 Postcondition: Returns true the value is found.*/
-bool SkipList::contains(int data) const { 
+bool SkipList::contains(int data) const {
   SNode *curr;
-  for(int i = maxLevel - 1; i >=0; i--) {
+  for (int i = maxLevel - 1; i >= 0; i--) {
     curr = frontGuard[i];
-    while(curr != nullptr && curr->value < data) {
+    while (curr != nullptr && curr->value < data) {
       curr = curr->next;
-      if(curr->value == data) {
+      if (curr->value == data) {
         return true;
       }
     }
   }
-  return false; 
+  return false;
 }
