@@ -16,6 +16,10 @@ class SkipList;
 
 class SNode {
   friend class SkipList;
+
+  /** Overloaded << operator prints out the SkipList at every level.
+  Precondition: SkipList must be instantiated.
+  Postcondition: Prints SkipList to the console.*/
   friend ostream &operator<<(ostream &out, const SkipList &skip);
 
 private:
