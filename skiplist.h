@@ -76,7 +76,7 @@ private:
 
 public:
   // default SkipList has only 1 level, just one doubly-linked list
-  explicit SkipList(int maxLevel, int probability = 50);
+  explicit SkipList(int maxLevel = 1, int probability = 50);
 
   // destructor
   virtual ~SkipList();
@@ -100,9 +100,9 @@ public:
 
   void addAtLevel(int value, int level);
 
-  void connectAtLevel(SNode *prev, SNode *curr, SNode *newNode);
+  void addBefore(SNode *curr, SNode *newNode);
 
-  void connectBelow(SNode *node, int level);
+  void connectLevels(SNode *node, int level);
 
   // return true if successfully removed
   bool remove(int data);
