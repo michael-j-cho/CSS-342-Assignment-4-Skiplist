@@ -40,7 +40,7 @@ void test1() {
 
 /** Test. Creates a SkipList object s with 4 levels
 and 50 percent probability. Uses a for loop for randomly
-generate 40 numbers to enter into the skiplist. Displays
+generate 20 numbers to enter into the skiplist. Displays
 the skiplist after each added value. */
 void test2() {
   SkipList s(4);
